@@ -4,6 +4,21 @@ You need: a phone, your GitHub repo, and a free Render account. Total time ≈ 3
 
 ---
 
+## ⭐ YOUR PROJECT — quick links
+
+| What | Where |
+|---|---|
+| Your repo | https://github.com/cybnateofficial-crypto/Vibe |
+| **Download your APK** | https://github.com/cybnateofficial-crypto/Vibe/actions → open the latest **"Build Android APK"** run → **Artifacts** → **vibeforge** → unzip → install `app-debug.apk` |
+| Rebuild the APK after any code change | It rebuilds **automatically on every push**. Or: Actions → *Build Android APK* → **Run workflow** |
+| Deploy the server | https://render.com → New → **Web Service** → connect the `Vibe` repo → **Root Directory: `server`**, Build: `npm install`, Start: `node src/index.js`, Free plan |
+
+> ℹ️ The `app/android/` folder is **not** stored in the repo — the APK workflow regenerates it automatically
+> with `npx expo prebuild` before every build (that's normal Expo practice; keeps the repo clean).
+> Everything else (SDK licenses, Gradle, packaging) is already handled inside the workflow — verified green. ✅
+
+---
+
 ## Step 0 — get the code into your GitHub repo
 
 Pick whichever works on your phone:
