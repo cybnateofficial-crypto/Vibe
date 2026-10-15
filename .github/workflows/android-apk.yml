@@ -28,16 +28,22 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - uses: android-actions/setup-android@v3
-
-      - name: Accept Android SDK licenses
-        run: yes | sdkmanager --licenses > /dev/null 2>&1 || true
-
-      - name: Preinstall common Android SDK packages
+      # Uses the Android SDK that is already preinstalled on GitHub's Ubuntu runner.
+      # (No third-party action needed — those break when SDK package names change.)
+      - name: Prepare Android SDK
         run: |
-          sdkmanager --install "platform-tools" "platforms;android-36" "build-tools;36.0.0" > /dev/null 2>&1 || true
-          sdkmanager --install "platforms;android-35" "build-tools;35.0.0" > /dev/null 2>&1 || true
-          echo "Installed SDK packages:"; sdkmanager --list_installed 2>/dev/null | head -20 || true
+          set -e
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          echo "Using SDK at: $SDK"
+          SDKMGR="$(find "$SDK" -name sdkmanager -type f 2>/dev/null | head -1)"
+          if [ -z "$SDKMGR" ]; then echo "sdkmanager not found in $SDK"; ls "$SDK/cmdline-tools" || true; exit 1; fi
+          echo "sdkmanager: $SDKMGR"
+          yes | "$SDKMGR" --sdk_root="$SDK" --licenses > /dev/null 2>&1 || true
+          "$SDKMGR" --sdk_root="$SDK" --install "platform-tools" "platforms;android-36" "build-tools;36.0.0" || true
+          "$SDKMGR" --sdk_root="$SDK" --install "platforms;android-35" "build-tools;35.0.0" || true
+          echo "sdk.dir=$SDK" > app/android/local.properties
+          echo "--- local.properties ---"; cat app/android/local.properties
+          echo "--- installed packages ---"; "$SDKMGR" --sdk_root="$SDK" --list_installed 2>/dev/null | head -25 || true
 
       - name: Install JS dependencies
         working-directory: app
@@ -49,9 +55,8 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon --stacktrace
 
-      - name: Show build output location
-        working-directory: app/android
-        run: find . -name "*.apk" -type f 2>/dev/null || true
+      - name: List built APKs
+        run: find app/android -name "*.apk" -type f 2>/dev/null || true
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
