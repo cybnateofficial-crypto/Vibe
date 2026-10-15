@@ -1,0 +1,47 @@
+# Render blueprint — deploy the VibeForge server to the cloud, free tier.
+# 1. Push this repo to GitHub (see DEPLOY.md for phone-friendly ways)
+# 2. render.com → New → Blueprint → pick your repo → Apply
+# 3. Add your secret env vars in the Render dashboard (AI key, Razorpay, ADMIN_TOKEN)
+# 4. Copy the https URL into SERVER_URL and into the app's Settings screen
+
+services:
+  - type: web
+    name: vibeforge-server
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node src/index.js
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: AI_PROVIDER
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: MODEL_FREE
+        value: anthropic:claude-haiku-4-5
+      - key: MODEL_STARTER
+        value: anthropic:claude-haiku-4-5
+      - key: MODEL_PRO
+        value: anthropic:claude-sonnet-5
+      - key: ADMIN_TOKEN
+        sync: false
+      - key: APP_SECRET
+        sync: false
+      - key: SERVER_URL
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false

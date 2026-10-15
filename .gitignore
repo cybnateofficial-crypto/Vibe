@@ -1,0 +1,25 @@
+# Node
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native builds (keep android/ and ios/ themselves — they're the Android Studio project)
+android/app/build/
+android/build/
+android/.gradle/
+ios/Pods/
+
+# Server runtime data (user accounts, projects, encryption keys)
+server/workspaces/
+server/data/
+server/.env
+.env
+
+# Misc
+*.log
+.DS_Store
+icon-source.png

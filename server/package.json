@@ -1,0 +1,14 @@
+{
+  "name": "vibeforge-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "VibeForge backend: AI agent loop + live preview server. Zero dependencies.",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
